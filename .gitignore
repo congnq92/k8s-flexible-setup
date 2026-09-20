@@ -1,0 +1,24 @@
+# Local environment configuration
+.env
+.env.*
+!.env.example
+
+# Installer state and logs
+state/
+logs/
+*.log
+
+# Credentials and Kubernetes access files
+*.key
+*.pem
+*.kubeconfig
+kubeconfig
+.kube/
+
+# Local editor files
+.DS_Store
+.idea/
+.vscode/
+
+# tmp
+/tmp

@@ -6,6 +6,9 @@
 
 - [Plan](docs/1-plan.md)
 - [Groups definition](docs/2-groups-definition.md)
+- [Flexible topology](docs/3-flexible.md)
+- [Mermaid diagrams](docs/4-diagrams.md)
+- [Network modes](docs/5-network-modes.md)
 
 ## UI
 
