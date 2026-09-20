@@ -38,3 +38,23 @@ flowchart TB
     controlPlane -. manages .-> ingress
     controlPlane -. schedules .-> worker
 ```
+
+## Network flow
+
+```mermaid
+flowchart TB
+    internet[Internet] --> publicIp[Public IP]
+
+    subgraph cluster[Kubernetes Cluster]
+        subgraph node1[VPS 1 / Kubernetes Node 1]
+            privateIp1[Private IP]
+        end
+
+        subgraph node2[VPS 2 / Kubernetes Node 2]
+            privateIp2[Private IP]
+        end
+    end
+
+    publicIp --> node1
+    privateIp1 <-->|VPC or WireGuard<br>API · etcd · kubelet · node-to-node| privateIp2
+```

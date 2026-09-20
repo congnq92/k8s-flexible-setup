@@ -9,6 +9,7 @@
 - [Flexible topology](docs/3-flexible.md)
 - [Mermaid diagrams](docs/4-diagrams.md)
 - [Network modes](docs/5-network-modes.md)
+- [Deployment planning](docs/6-deployment-planning.md)
 
 ## UI
 
@@ -19,6 +20,13 @@ Use Gum.
 ```text
 k8s-flexible-setup/
 ├── scripts/
+│   ├── install.sh       # public bootstrap: clone/check repository, then start app.sh
+│   ├── app.sh           # install Gum if needed, then show the main menu
+│   ├── menu/            # deployment plan, group install, and last deployment plan
+│   ├── groups/          # control-plane, worker, and NGINX Ingress installers
+│   └── lib/             # shared shell functions
+├── config/
+├── state/               # local deployment plans, status, and logs; ignored by Git
 └── docs/
 ```
 
