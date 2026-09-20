@@ -2,27 +2,10 @@
 
 - Author: Tom Nguyen, Antigravity CLI, Codex
 
-# Plan
-- Build a scalable custom k8s scripts can install in 1 - A VPSs
-- Keep simple with One Cluster first
-- Flexible manage nodes
-- Example:
-```text
-One Cluster
-  ├─ Control plane: 1 or 3 VPSs
-  └─ Worker nodes: 1 to 5,000 VPSs
-     └─ Pods: up to 150,000 total
-```
+## Documentation
 
-## Groups definition
-- Groups are groups of things that need to be installed (it is developer-defined)
-- Each group will have installing script for pick to install in desire VPS
-
-| Group               | Role / term                            | Installed components / purpose                                                  |
-|---------------------|----------------------------------------|---------------------------------------------------------------------------------|
-| Control-plane group | Control-plane role (standard term)     | API server<br>etcd<br>scheduler<br>controller manager                           |
-| Worker group        | Worker role (standard term)            | container runtime<br>kubelet<br>kube-proxy<br>Runs Ingress and application Pods |
-| NGINX Ingress group | NGINX Ingress (developer-defined term) | Optional add-on on worker-capable VPSs                                          |
+- [Plan](docs/1-plan.md)
+- [Groups definition](docs/2-groups-definition.md)
 
 ## UI
 
