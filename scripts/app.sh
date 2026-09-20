@@ -38,21 +38,55 @@ ensure_gum() {
 
 ensure_gum
 
-mapfile -t GROUP_SCRIPTS < <(find "${SCRIPT_DIR}/groups" -maxdepth 1 -type f -name '*.sh' -printf '%f\n' | sort)
-(( ${#GROUP_SCRIPTS[@]} > 0 )) || fail 'No group scripts were found in scripts/groups.'
+readonly CONTROL_PLANE_SCRIPT='1-install-control-plane.sh'
+readonly WORKER_SCRIPT='2-install-worker.sh'
+readonly NGINX_INGRESS_SCRIPT='3-install-nginx-ingress.sh'
+readonly TOPOLOGY_OPTIONS=(
+    '1 VPS | VPS 1 | Control-plane + Worker + NGINX Ingress'
+    '2 VPS | VPS 1 | Control-plane + Worker + NGINX Ingress'
+    '2 VPS | VPS 2 | Worker'
+    '3 VPS | VPS 1 | Control-plane + Worker + NGINX Ingress'
+    '3 VPS | VPS 2 | Control-plane + Worker + NGINX Ingress'
+    '3 VPS | VPS 3 | Control-plane + Worker'
+)
+
+for group_script in "${CONTROL_PLANE_SCRIPT}" "${WORKER_SCRIPT}" "${NGINX_INGRESS_SCRIPT}"; do
+    [[ -x "${SCRIPT_DIR}/groups/${group_script}" ]] || fail "Required group script not found: ${group_script}"
+done
 
 while true; do
     gum style --border double --padding '1 2' --margin '1 0' 'K8s Flexible Setup'
-    selected_scripts="$(gum choose --no-limit --show-help --header 'Select a group script (x for select, enter to process)' "${GROUP_SCRIPTS[@]}")"
+    selected_rows="$(gum choose --header $'Select one VPS row, then press Enter\n  Case  | VPS   | Groups to select\n  ------+-------+-----------------' "${TOPOLOGY_OPTIONS[@]}")"
 
-    [[ -n "${selected_scripts}" ]] || continue
-    selected_scripts_display="${selected_scripts//$'\n'/, }"
-    gum style --bold "Selected scripts: ${selected_scripts_display}"
+    [[ -n "${selected_rows}" ]] || continue
+    declare -a planned_runs=()
+
+    while IFS='|' read -r selected_case selected_vps selected_groups; do
+        selected_vps="${selected_vps# }"
+        selected_vps="${selected_vps% }"
+        selected_groups="${selected_groups# }"
+        selected_groups="${selected_groups% }"
+
+        if [[ "${selected_groups}" == *'Control-plane'* ]]; then
+            planned_runs+=("${CONTROL_PLANE_SCRIPT} | ${selected_case} | ${selected_vps}")
+        elif [[ "${selected_groups}" == *'Worker'* ]]; then
+            planned_runs+=("${WORKER_SCRIPT} | ${selected_case} | ${selected_vps}")
+        fi
+
+        if [[ "${selected_groups}" == *'NGINX Ingress'* ]]; then
+            planned_runs+=("${NGINX_INGRESS_SCRIPT} | ${selected_case} | ${selected_vps}")
+        fi
+    done <<<"${selected_rows}"
+
+    mapfile -t ordered_runs < <(printf '%s\n' "${planned_runs[@]}" | sort)
+    gum style --bold 'Scripts to run in order:'
+    printf '%s\n' "${ordered_runs[@]}"
 
     gum confirm 'Confirm to run these script(s) (1/2)?' >/dev/null || continue
     gum confirm 'Confirm to run these script(s) (2/2)?' >/dev/null || continue
 
-    while IFS= read -r selected_script; do
+    for planned_run in "${ordered_runs[@]}"; do
+        selected_script="${planned_run%% | *}"
         "${SCRIPT_DIR}/groups/${selected_script}"
-    done <<<"${selected_scripts}"
+    done
 done
