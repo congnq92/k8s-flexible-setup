@@ -23,8 +23,6 @@ k8s-flexible-setup/
 │   ├── app.sh           # install Gum if needed, then select a group script
 │   ├── groups/          # control-plane, worker, and NGINX Ingress installers
 │   └── lib/             # shared shell functions
-├── config/
-├── state/               # local deployment plans, status, and logs; ignored by Git
 └── docs/
 ```
 
