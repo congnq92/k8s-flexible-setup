@@ -21,8 +21,7 @@ Use Gum.
 k8s-flexible-setup/
 ├── scripts/
 │   ├── install.sh       # public bootstrap: clone/check repository, then start app.sh
-│   ├── app.sh           # install Gum if needed, then show the main menu
-│   ├── menu/            # deployment plan, group install, and last deployment plan
+│   ├── app.sh           # install Gum if needed, then select a group script
 │   ├── groups/          # control-plane, worker, and NGINX Ingress installers
 │   └── lib/             # shared shell functions
 ├── config/

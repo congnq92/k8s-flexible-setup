@@ -2,6 +2,10 @@
 
 set -Eeuo pipefail
 
+# Temporary test entry point.
+printf 'Test script A\n'
+exit 0
+
 readonly SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=../lib/common.sh
 source "${SCRIPT_DIR}/../lib/common.sh"

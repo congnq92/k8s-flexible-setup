@@ -38,22 +38,21 @@ ensure_gum() {
 
 ensure_gum
 
+mapfile -t GROUP_SCRIPTS < <(find "${SCRIPT_DIR}/groups" -maxdepth 1 -type f -name '*.sh' -printf '%f\n' | sort)
+(( ${#GROUP_SCRIPTS[@]} > 0 )) || fail 'No group scripts were found in scripts/groups.'
+
 while true; do
     gum style --border double --padding '1 2' --margin '1 0' 'K8s Flexible Setup'
-    action="$(gum choose --header 'Select an action' 'Deployment plan' 'Group install' 'Last deployment plan' 'Exit')"
+    selected_scripts="$(gum choose --no-limit --show-help --header 'Select a group script (x for select, enter to process)' "${GROUP_SCRIPTS[@]}")"
 
-    case "${action}" in
-        'Deployment plan')
-            "${SCRIPT_DIR}/menu/deployment-plan.sh"
-            ;;
-        'Group install')
-            "${SCRIPT_DIR}/menu/group-install.sh"
-            ;;
-        'Last deployment plan')
-            "${SCRIPT_DIR}/menu/last-deployment-plan.sh"
-            ;;
-        'Exit')
-            exit 0
-            ;;
-    esac
+    [[ -n "${selected_scripts}" ]] || continue
+    selected_scripts_display="${selected_scripts//$'\n'/, }"
+    gum style --bold "Selected scripts: ${selected_scripts_display}"
+
+    gum confirm 'Confirm to run these script(s) (1/2)?' >/dev/null || continue
+    gum confirm 'Confirm to run these script(s) (2/2)?' >/dev/null || continue
+
+    while IFS= read -r selected_script; do
+        "${SCRIPT_DIR}/groups/${selected_script}"
+    done <<<"${selected_scripts}"
 done

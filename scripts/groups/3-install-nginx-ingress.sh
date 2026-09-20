@@ -2,6 +2,10 @@
 
 set -Eeuo pipefail
 
+# Temporary test entry point.
+printf 'Test script C\n'
+exit 0
+
 readonly INGRESS_NGINX_VERSION="${INGRESS_NGINX_VERSION:-v1.15.1}"
 readonly KUBECONFIG_PATH="${KUBECONFIG_PATH:-/etc/kubernetes/admin.conf}"
 readonly INGRESS_NGINX_MANIFEST_URL="https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-${INGRESS_NGINX_VERSION}/deploy/static/provider/baremetal/deploy.yaml"
