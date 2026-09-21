@@ -90,3 +90,5 @@ while true; do
         "${SCRIPT_DIR}/groups/${selected_script}"
     done
 done
+
+# todo: check scripts to run is incorrect, then run script 1 time, notify done and remind user if they want to run installer again, run the install.sh script from repository
