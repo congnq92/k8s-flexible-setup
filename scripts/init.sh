@@ -11,6 +11,8 @@ source "${SCRIPTS_PATH}/config.sh"
 source "${SCRIPTS_PATH}/lib/util.sh"
 # shellcheck source=lib/common.sh
 source "${SCRIPTS_PATH}/lib/common.sh"
+# shellcheck source=lib/network.sh
+source "${SCRIPTS_PATH}/lib/network.sh"
 
 # Load development-only modules.
 # shellcheck source=z-dev/dev-mode.sh

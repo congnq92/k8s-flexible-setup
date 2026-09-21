@@ -61,6 +61,14 @@ EOF
     sysctl --system >/dev/null
 }
 
+configure_kubelet_node_ip() {
+    local node_private_ip="$1"
+
+    log "Configuring kubelet node IP: ${node_private_ip}"
+    printf 'KUBELET_EXTRA_ARGS=--node-ip=%s\n' "${node_private_ip}" >/etc/default/kubelet
+    systemctl daemon-reload
+}
+
 configure_containerd() {
     log 'Installing and configuring containerd'
     apt-get update

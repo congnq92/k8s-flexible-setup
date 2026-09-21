@@ -43,3 +43,14 @@ NETWORK_MODE=wireguard
 ```
 
 Do not use both.
+
+## Installer input
+
+When the Control-plane or Worker group first runs on a VPS, select the network mode and enter the private IP already assigned to that VPS. The group script saves these values locally on that VPS and uses the private IP for the control-plane API server and kubelet node address.
+
+```text
+NETWORK_MODE=wireguard
+NODE_PRIVATE_IP=10.10.0.12
+```
+
+The installer does not configure VPC or WireGuard, and does not store WireGuard keys.

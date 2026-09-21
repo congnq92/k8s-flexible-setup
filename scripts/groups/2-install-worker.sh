@@ -6,6 +6,9 @@ set -Eeuo pipefail
 source "$(dirname -- "${BASH_SOURCE[0]}")/../init.sh"
 devModeExitIfEnabled "${BASH_SOURCE[0]}"
 
+networkEnsureConfiguration
+readonly NODE_PRIVATE_IP="$(networkPrivateIpGet)"
+
 readonly KUBERNETES_MINOR="$(get_kubernetes_minor)"
 
 [[ -n "${CONTROL_PLANE_ENDPOINT:-}" ]] || fail 'Set CONTROL_PLANE_ENDPOINT to the control-plane private address and port, for example 10.10.0.10:6443.'
@@ -13,6 +16,7 @@ readonly KUBERNETES_MINOR="$(get_kubernetes_minor)"
 [[ "${DISCOVERY_TOKEN_CA_CERT_HASH:-}" =~ ^sha256:[a-f0-9]{64}$ ]] || fail 'Set DISCOVERY_TOKEN_CA_CERT_HASH to the control-plane discovery hash.'
 
 install_node_prerequisites "${KUBERNETES_MINOR}"
+configure_kubelet_node_ip "${NODE_PRIVATE_IP}"
 
 log "Joining the ${KUBERNETES_MINOR} Kubernetes cluster"
 kubeadm join "${CONTROL_PLANE_ENDPOINT}" \

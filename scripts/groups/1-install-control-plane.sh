@@ -6,6 +6,9 @@ set -Eeuo pipefail
 source "$(dirname -- "${BASH_SOURCE[0]}")/../init.sh"
 devModeExitIfEnabled "${BASH_SOURCE[0]}"
 
+networkEnsureConfiguration
+readonly NODE_PRIVATE_IP="$(networkPrivateIpGet)"
+
 readonly KUBERNETES_MINOR="$(get_kubernetes_minor)"
 readonly KUBECTL_USER="${SUDO_USER:-root}"
 readonly KUBECTL_HOME="$(getent passwd "${KUBECTL_USER}" | cut -d: -f6)"
@@ -17,12 +20,9 @@ if [[ -f /etc/kubernetes/admin.conf ]]; then
 fi
 
 install_node_prerequisites "${KUBERNETES_MINOR}"
+configure_kubelet_node_ip "${NODE_PRIVATE_IP}"
 
-init_args=(init "--kubernetes-version=${KUBERNETES_MINOR}")
-
-if [[ -n "${API_ADVERTISE_ADDRESS:-}" ]]; then
-    init_args+=("--apiserver-advertise-address=${API_ADVERTISE_ADDRESS}")
-fi
+init_args=(init "--kubernetes-version=${KUBERNETES_MINOR}" "--apiserver-advertise-address=${NODE_PRIVATE_IP}")
 
 if [[ -n "${CONTROL_PLANE_ENDPOINT:-}" ]]; then
     init_args+=("--control-plane-endpoint=${CONTROL_PLANE_ENDPOINT}")
