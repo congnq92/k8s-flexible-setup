@@ -93,17 +93,19 @@ while true; do
         fi
     done <<<"${selected_item}"
 
-    mapfile -t ordered_runs < <(printf '%s\n' "${planned_runs[@]}" | sort)
+    mapfile -t ordered_scripts < <(printf '%s\n' "${planned_runs[@]}" | cut -d '|' -f 1 | sed 's/[[:space:]]*$//' | sort -u)
     gum style --bold 'Scripts to run in order:'
-    for planned_run in "${ordered_runs[@]}"; do
-        printf '%s\n' "${planned_run%% | *}"
+    for selected_script in "${ordered_scripts[@]}"; do
+        printf '%s\n' "${selected_script}"
     done
 
     gum confirm 'Confirm to run these script(s) (1/2)?' >/dev/null || continue
     gum confirm 'Confirm to run these script(s) (2/2)?' >/dev/null || continue
 
-    for planned_run in "${ordered_runs[@]}"; do
-        selected_script="${planned_run%% | *}"
+    for selected_script in "${ordered_scripts[@]}"; do
         devModeRunScript "${APP_PATH}/scripts/groups/${selected_script}"
     done
+
+    gum log --level info 'Selected group scripts completed.'
+    gum confirm 'Run the installer again?' >/dev/null || exit 0
 done
