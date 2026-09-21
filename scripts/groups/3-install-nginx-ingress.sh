@@ -2,9 +2,9 @@
 
 set -Eeuo pipefail
 
-# Temporary test entry point.
-printf 'Test script C\n'
-exit 0
+# shellcheck source=../lib/init-lib.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../lib/init-lib.sh"
+devModeExitIfEnabled "${BASH_SOURCE[0]}"
 
 readonly INGRESS_NGINX_VERSION="${INGRESS_NGINX_VERSION:-v1.15.1}"
 readonly KUBECONFIG_PATH="${KUBECONFIG_PATH:-/etc/kubernetes/admin.conf}"

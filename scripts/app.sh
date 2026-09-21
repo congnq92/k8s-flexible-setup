@@ -2,12 +2,8 @@
 
 set -Eeuo pipefail
 
-readonly SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-
-fail() {
-    printf 'ERROR: %s\n' "$*" >&2
-    exit 1
-}
+# shellcheck source=lib/init-lib.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/lib/init-lib.sh"
 
 run_privileged() {
     if [[ "${EUID}" -eq 0 ]]; then
@@ -41,7 +37,9 @@ ensure_gum
 readonly CONTROL_PLANE_SCRIPT='1-install-control-plane.sh'
 readonly WORKER_SCRIPT='2-install-worker.sh'
 readonly NGINX_INGRESS_SCRIPT='3-install-nginx-ingress.sh'
+readonly TEST_GROUP_SCRIPT='0-test-group.sh'
 readonly TOPOLOGY_OPTIONS=(
+    '0 -   | 0 Test | Test group'
     '1 VPS | VPS 1 | Control-plane + Worker + NGINX Ingress'
     '2 VPS | VPS 1 | Control-plane + Worker + NGINX Ingress'
     '2 VPS | VPS 2 | Worker'
@@ -49,16 +47,33 @@ readonly TOPOLOGY_OPTIONS=(
     '3 VPS | VPS 2 | Control-plane + Worker + NGINX Ingress'
     '3 VPS | VPS 3 | Control-plane + Worker'
 )
+readonly MENU_DIVIDER='─────────────────────────────────'
+readonly MENU_SWITCH_MODE='2. Switch mode: Dev | Prod'
+readonly MENU_EXIT='3. Exit'
 
-for group_script in "${CONTROL_PLANE_SCRIPT}" "${WORKER_SCRIPT}" "${NGINX_INGRESS_SCRIPT}"; do
-    [[ -x "${SCRIPT_DIR}/groups/${group_script}" ]] || fail "Required group script not found: ${group_script}"
+for group_script in "${TEST_GROUP_SCRIPT}" "${CONTROL_PLANE_SCRIPT}" "${WORKER_SCRIPT}" "${NGINX_INGRESS_SCRIPT}"; do
+    [[ -x "${APP_PATH}/scripts/groups/${group_script}" ]] || fail "Required group script not found: ${group_script}"
 done
 
 while true; do
-    gum style --border double --padding '1 2' --margin '1 0' 'K8s Flexible Setup'
-    selected_rows="$(gum choose --header $'Select one VPS row, then press Enter\n  Case  | VPS   | Groups to select\n  ------+-------+-----------------' "${TOPOLOGY_OPTIONS[@]}")"
+    mode="$(devModeGet)"
+    gum style --border double --padding '0 1' --margin '1 0' 'K8s Flexible Setup' "Mode: ${mode}" "Working dir: ${APP_PATH}"
+    selected_item="$(gum choose --header $'1. Select one VPS row, then press Enter\n  Case  | VPS   | Groups to select\n  ------+-------+-----------------' "${TOPOLOGY_OPTIONS[@]}" "${MENU_DIVIDER}" "${MENU_SWITCH_MODE}" "${MENU_EXIT}")"
 
-    [[ -n "${selected_rows}" ]] || continue
+    case "${selected_item}" in
+        "${MENU_DIVIDER}")
+            continue
+            ;;
+        "${MENU_SWITCH_MODE}")
+            gum log --level info "Mode switched to $(devModeSwitch)."
+            continue
+            ;;
+        "${MENU_EXIT}")
+            exit 0
+            ;;
+    esac
+
+    [[ -n "${selected_item}" ]] || continue
     declare -a planned_runs=()
 
     while IFS='|' read -r selected_case selected_vps selected_groups; do
@@ -67,28 +82,34 @@ while true; do
         selected_groups="${selected_groups# }"
         selected_groups="${selected_groups% }"
 
+        if [[ "${selected_groups}" == 'Test group' ]]; then
+            planned_runs+=("${TEST_GROUP_SCRIPT} | ${selected_case} | ${selected_vps}")
+        fi
+
         if [[ "${selected_groups}" == *'Control-plane'* ]]; then
             planned_runs+=("${CONTROL_PLANE_SCRIPT} | ${selected_case} | ${selected_vps}")
-        elif [[ "${selected_groups}" == *'Worker'* ]]; then
+        fi
+
+        if [[ "${selected_groups}" == *'Worker'* ]]; then
             planned_runs+=("${WORKER_SCRIPT} | ${selected_case} | ${selected_vps}")
         fi
 
         if [[ "${selected_groups}" == *'NGINX Ingress'* ]]; then
             planned_runs+=("${NGINX_INGRESS_SCRIPT} | ${selected_case} | ${selected_vps}")
         fi
-    done <<<"${selected_rows}"
+    done <<<"${selected_item}"
 
     mapfile -t ordered_runs < <(printf '%s\n' "${planned_runs[@]}" | sort)
     gum style --bold 'Scripts to run in order:'
-    printf '%s\n' "${ordered_runs[@]}"
+    for planned_run in "${ordered_runs[@]}"; do
+        printf '%s\n' "${planned_run%% | *}"
+    done
 
     gum confirm 'Confirm to run these script(s) (1/2)?' >/dev/null || continue
     gum confirm 'Confirm to run these script(s) (2/2)?' >/dev/null || continue
 
     for planned_run in "${ordered_runs[@]}"; do
         selected_script="${planned_run%% | *}"
-        "${SCRIPT_DIR}/groups/${selected_script}"
+        devModeRunScript "${APP_PATH}/scripts/groups/${selected_script}"
     done
 done
-
-# todo: check scripts to run is incorrect, then run script 1 time, notify done and remind user if they want to run installer again, run the install.sh script from repository

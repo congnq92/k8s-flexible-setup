@@ -2,13 +2,9 @@
 
 set -Eeuo pipefail
 
-# Temporary test entry point.
-printf 'Test script A\n'
-exit 0
-
-readonly SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-# shellcheck source=../lib/common.sh
-source "${SCRIPT_DIR}/../lib/common.sh"
+# shellcheck source=../lib/init-lib.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../lib/init-lib.sh"
+devModeExitIfEnabled "${BASH_SOURCE[0]}"
 
 readonly KUBERNETES_MINOR="$(get_kubernetes_minor)"
 
