@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-BRANCH=v-1-37-x
+BRANCH=v1.37.x
