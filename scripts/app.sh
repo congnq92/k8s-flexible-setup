@@ -37,9 +37,7 @@ ensure_gum
 readonly CONTROL_PLANE_SCRIPT='1-install-control-plane.sh'
 readonly WORKER_SCRIPT='2-install-worker.sh'
 readonly NGINX_INGRESS_SCRIPT='3-install-nginx-ingress.sh'
-readonly TEST_GROUP_SCRIPT='0-test-group.sh'
 readonly TOPOLOGY_OPTIONS=(
-    '0 -   | 0 Test | Test group'
     '1 VPS | VPS 1 | Control-plane + Worker + NGINX Ingress'
     '2 VPS | VPS 1 | Control-plane + Worker + NGINX Ingress'
     '2 VPS | VPS 2 | Worker'
@@ -51,7 +49,7 @@ readonly MENU_DIVIDER='───────────────────
 readonly MENU_SWITCH_MODE='2. Switch mode: Dev | Prod'
 readonly MENU_EXIT='3. Exit'
 
-for group_script in "${TEST_GROUP_SCRIPT}" "${CONTROL_PLANE_SCRIPT}" "${WORKER_SCRIPT}" "${NGINX_INGRESS_SCRIPT}"; do
+for group_script in "${CONTROL_PLANE_SCRIPT}" "${WORKER_SCRIPT}" "${NGINX_INGRESS_SCRIPT}"; do
     [[ -x "${APP_PATH}/scripts/groups/${group_script}" ]] || fail "Required group script not found: ${group_script}"
 done
 
@@ -81,10 +79,6 @@ while true; do
         selected_vps="${selected_vps% }"
         selected_groups="${selected_groups# }"
         selected_groups="${selected_groups% }"
-
-        if [[ "${selected_groups}" == 'Test group' ]]; then
-            planned_runs+=("${TEST_GROUP_SCRIPT} | ${selected_case} | ${selected_vps}")
-        fi
 
         if [[ "${selected_groups}" == *'Control-plane'* ]]; then
             planned_runs+=("${CONTROL_PLANE_SCRIPT} | ${selected_case} | ${selected_vps}")
