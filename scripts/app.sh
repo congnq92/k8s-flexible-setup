@@ -41,6 +41,7 @@ readonly NGINX_INGRESS_SCRIPT='4-install-nginx-ingress.sh'
 readonly LOCAL_STORAGE_SCRIPT='5-install-local-storage.sh'
 readonly METRICS_SERVER_SCRIPT='6-install-metrics-server.sh'
 readonly ADMIN_TOOLS_SCRIPT='7-install-admin-tools.sh'
+readonly ADMIN_JOIN_WORKER_SCRIPT='1-join-worker.sh'
 readonly TOPOLOGY_OPTIONS=(
     '1 VPS | VPS 1 | Control-plane + Worker + CNI + NGINX Ingress + Local Storage + Metrics Server + Admin Tools'
     '2 VPS | VPS 1 | Control-plane + Worker + CNI + NGINX Ingress + Local Storage + Metrics Server + Admin Tools'
@@ -50,21 +51,34 @@ readonly TOPOLOGY_OPTIONS=(
     '3 VPS | VPS 3 | Control-plane + Worker'
 )
 readonly MENU_DIVIDER='─────────────────────────────────'
-readonly MENU_SWITCH_MODE='2. Switch mode: Dev | Prod'
-readonly MENU_EXIT='3. Exit'
+readonly MENU_ADMIN_JOIN_WORKER='2.1 Join worker node'
+readonly MENU_SWITCH_MODE='3.1 Switch mode: Dev | Prod'
+readonly MENU_EXIT='3.2 Exit'
 
 for group_script in "${CONTROL_PLANE_SCRIPT}" "${WORKER_SCRIPT}" "${CNI_SCRIPT}" "${NGINX_INGRESS_SCRIPT}" "${LOCAL_STORAGE_SCRIPT}" "${METRICS_SERVER_SCRIPT}" "${ADMIN_TOOLS_SCRIPT}"; do
     [[ -x "${APP_PATH}/scripts/groups/${group_script}" ]] || fail "Required group script not found: ${group_script}"
 done
+[[ -x "${APP_PATH}/scripts/admin/${ADMIN_JOIN_WORKER_SCRIPT}" ]] || fail "Required admin script not found: ${ADMIN_JOIN_WORKER_SCRIPT}"
 
 while true; do
     mode="$(devModeGet)"
     gum style --border double --padding '0 1' --margin '1 0' 'K8s Flexible Setup' "Mode: ${mode}" "Working dir: ${APP_PATH}" "Branch: ${BRANCH}"
-    selected_item="$(gum choose --header $'1. Select one VPS row, then press Enter\n  Case  | VPS   | Groups to select\n  ------+-------+-----------------' "${TOPOLOGY_OPTIONS[@]}" "${MENU_DIVIDER}" "${MENU_SWITCH_MODE}" "${MENU_EXIT}")"
+    selected_item="$(gum choose --header $'1.1 Select one VPS row, then press Enter\n  Case  | VPS   | Groups to select\n  ------+-------+-----------------' "${TOPOLOGY_OPTIONS[@]}" "${MENU_DIVIDER}" "${MENU_ADMIN_JOIN_WORKER}" "${MENU_DIVIDER}" "${MENU_SWITCH_MODE}" "${MENU_EXIT}")"
 
     case "${selected_item}" in
         "${MENU_DIVIDER}")
             continue
+            ;;
+        "${MENU_ADMIN_JOIN_WORKER}")
+            gum style --bold 'Admin script to run:'
+            printf '%s\n' "${ADMIN_JOIN_WORKER_SCRIPT}"
+            gum confirm 'Confirm to run this script (1/2)?' >/dev/null || continue
+            gum confirm 'Confirm to run this script (2/2)?' >/dev/null || continue
+            devModeRunScript "${APP_PATH}/scripts/admin/${ADMIN_JOIN_WORKER_SCRIPT}"
+            printf '%s\n' "${MENU_DIVIDER}"
+            gum log --level info 'Admin script completed.'
+            gum log --level info 'To open the app again, run the installer script again.'
+            exit 0
             ;;
         "${MENU_SWITCH_MODE}")
             gum log --level info "Mode switched to $(devModeSwitch)."

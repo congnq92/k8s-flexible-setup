@@ -6,7 +6,7 @@ For local PVC storage, pin the database Pod to the VPS where its volume is creat
 
 ```sh
 kubectl get nodes
-kubectl label node <vps-1-node-name> database-node=true
+kubectl label node <vps-4-node-name> workload=database
 ```
 
 ## 2. Select that node in the database StatefulSet
@@ -16,7 +16,7 @@ spec:
   template:
     spec:
       nodeSelector:
-        database-node: "true"
+        workload: database
 ```
 
 ## 3. Use delayed local-volume binding

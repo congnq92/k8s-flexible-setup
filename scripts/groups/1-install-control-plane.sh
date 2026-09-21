@@ -49,5 +49,4 @@ fi
 
 log 'Control plane installed'
 log 'Install a CNI plugin before expecting nodes and Pods to become Ready'
-log 'Generate a short-lived worker join command when ready:'
-printf 'sudo kubeadm token create --print-join-command\n'
+log 'To join a worker node, run: sudo scripts/admin/1-join-worker.sh'
