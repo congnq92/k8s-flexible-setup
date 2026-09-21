@@ -57,7 +57,7 @@ done
 
 while true; do
     mode="$(devModeGet)"
-    gum style --border double --padding '0 1' --margin '1 0' 'K8s Flexible Setup' "Mode: ${mode}" "Working dir: ${APP_PATH}"
+    gum style --border double --padding '0 1' --margin '1 0' 'K8s Flexible Setup' "Mode: ${mode}" "Working dir: ${APP_PATH}" "Branch: ${BRANCH}"
     selected_item="$(gum choose --header $'1. Select one VPS row, then press Enter\n  Case  | VPS   | Groups to select\n  ------+-------+-----------------' "${TOPOLOGY_OPTIONS[@]}" "${MENU_DIVIDER}" "${MENU_SWITCH_MODE}" "${MENU_EXIT}")"
 
     case "${selected_item}" in

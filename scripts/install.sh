@@ -3,7 +3,6 @@
 set -Eeuo pipefail
 
 readonly REPOSITORY_URL='https://github.com/congnq92/k8s-flexible-setup.git'
-readonly KFS_BRANCH="${KFS_BRANCH:-v-1-37-x}"
 readonly KFS_HOME="${KFS_HOME:-${HOME}/.local/share/k8s-flexible-setup}"
 
 fail() {
@@ -19,7 +18,7 @@ fi
 
 if [[ ! -d "${KFS_HOME}/.git" ]]; then
     mkdir -p "$(dirname -- "${KFS_HOME}")"
-    git clone --branch "${KFS_BRANCH}" "${REPOSITORY_URL}" "${KFS_HOME}"
+    git clone "${REPOSITORY_URL}" "${KFS_HOME}"
 fi
 
 exec "${KFS_HOME}/scripts/app.sh"
