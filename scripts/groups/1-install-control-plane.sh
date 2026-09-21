@@ -7,6 +7,10 @@ source "$(dirname -- "${BASH_SOURCE[0]}")/../init.sh"
 devModeExitIfEnabled "${BASH_SOURCE[0]}"
 
 readonly KUBERNETES_MINOR="$(get_kubernetes_minor)"
+readonly KUBECTL_USER="${SUDO_USER:-root}"
+readonly KUBECTL_HOME="$(getent passwd "${KUBECTL_USER}" | cut -d: -f6)"
+
+[[ -n "${KUBECTL_HOME}" ]] || fail "Cannot determine the home directory for ${KUBECTL_USER}."
 
 if [[ -f /etc/kubernetes/admin.conf ]]; then
     fail 'This host already has a Kubernetes control plane. Do not run kubeadm init again.'
@@ -32,6 +36,11 @@ log "Initializing the ${KUBERNETES_MINOR} control plane"
 kubeadm "${init_args[@]}"
 
 export KUBECONFIG=/etc/kubernetes/admin.conf
+
+# Give the user who started this install local kubectl access.
+# admin.conf has cluster-admin privileges and must stay on the control-plane VPS.
+install -d -m 0700 -o "${KUBECTL_USER}" -g "$(id -gn "${KUBECTL_USER}")" "${KUBECTL_HOME}/.kube"
+install -m 0600 -o "${KUBECTL_USER}" -g "$(id -gn "${KUBECTL_USER}")" /etc/kubernetes/admin.conf "${KUBECTL_HOME}/.kube/config"
 
 if [[ "${ALLOW_WORKLOADS_ON_CONTROL_PLANE:-false}" == 'true' ]]; then
     log 'Allowing workloads on the control-plane node'

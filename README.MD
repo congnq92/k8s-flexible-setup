@@ -10,6 +10,8 @@
 - [Mermaid diagrams](docs/4-diagrams.md)
 - [Network modes](docs/5-network-modes.md)
 - [Dev Mode](docs/6-dev-mode.md)
+- [Storage](docs/7-storage.md)
+- [Pin a database Pod](docs/8-pin-pod.md)
 
 ## UI
 

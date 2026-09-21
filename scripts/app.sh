@@ -36,12 +36,16 @@ ensure_gum
 
 readonly CONTROL_PLANE_SCRIPT='1-install-control-plane.sh'
 readonly WORKER_SCRIPT='2-install-worker.sh'
-readonly NGINX_INGRESS_SCRIPT='3-install-nginx-ingress.sh'
+readonly CNI_SCRIPT='3-install-cni.sh'
+readonly NGINX_INGRESS_SCRIPT='4-install-nginx-ingress.sh'
+readonly LOCAL_STORAGE_SCRIPT='5-install-local-storage.sh'
+readonly METRICS_SERVER_SCRIPT='6-install-metrics-server.sh'
+readonly ADMIN_TOOLS_SCRIPT='7-install-admin-tools.sh'
 readonly TOPOLOGY_OPTIONS=(
-    '1 VPS | VPS 1 | Control-plane + Worker + NGINX Ingress'
-    '2 VPS | VPS 1 | Control-plane + Worker + NGINX Ingress'
+    '1 VPS | VPS 1 | Control-plane + Worker + CNI + NGINX Ingress + Local Storage + Metrics Server + Admin Tools'
+    '2 VPS | VPS 1 | Control-plane + Worker + CNI + NGINX Ingress + Local Storage + Metrics Server + Admin Tools'
     '2 VPS | VPS 2 | Worker'
-    '3 VPS | VPS 1 | Control-plane + Worker + NGINX Ingress'
+    '3 VPS | VPS 1 | Control-plane + Worker + CNI + NGINX Ingress + Local Storage + Metrics Server + Admin Tools'
     '3 VPS | VPS 2 | Control-plane + Worker + NGINX Ingress'
     '3 VPS | VPS 3 | Control-plane + Worker'
 )
@@ -49,7 +53,7 @@ readonly MENU_DIVIDER='───────────────────
 readonly MENU_SWITCH_MODE='2. Switch mode: Dev | Prod'
 readonly MENU_EXIT='3. Exit'
 
-for group_script in "${CONTROL_PLANE_SCRIPT}" "${WORKER_SCRIPT}" "${NGINX_INGRESS_SCRIPT}"; do
+for group_script in "${CONTROL_PLANE_SCRIPT}" "${WORKER_SCRIPT}" "${CNI_SCRIPT}" "${NGINX_INGRESS_SCRIPT}" "${LOCAL_STORAGE_SCRIPT}" "${METRICS_SERVER_SCRIPT}" "${ADMIN_TOOLS_SCRIPT}"; do
     [[ -x "${APP_PATH}/scripts/groups/${group_script}" ]] || fail "Required group script not found: ${group_script}"
 done
 
@@ -88,8 +92,24 @@ while true; do
             planned_runs+=("${WORKER_SCRIPT} | ${selected_case} | ${selected_vps}")
         fi
 
+        if [[ "${selected_groups}" == *'CNI'* ]]; then
+            planned_runs+=("${CNI_SCRIPT} | ${selected_case} | ${selected_vps}")
+        fi
+
         if [[ "${selected_groups}" == *'NGINX Ingress'* ]]; then
             planned_runs+=("${NGINX_INGRESS_SCRIPT} | ${selected_case} | ${selected_vps}")
+        fi
+
+        if [[ "${selected_groups}" == *'Local Storage'* ]]; then
+            planned_runs+=("${LOCAL_STORAGE_SCRIPT} | ${selected_case} | ${selected_vps}")
+        fi
+
+        if [[ "${selected_groups}" == *'Metrics Server'* ]]; then
+            planned_runs+=("${METRICS_SERVER_SCRIPT} | ${selected_case} | ${selected_vps}")
+        fi
+
+        if [[ "${selected_groups}" == *'Admin Tools'* ]]; then
+            planned_runs+=("${ADMIN_TOOLS_SCRIPT} | ${selected_case} | ${selected_vps}")
         fi
     done <<<"${selected_item}"
 
@@ -106,6 +126,8 @@ while true; do
         devModeRunScript "${APP_PATH}/scripts/groups/${selected_script}"
     done
 
+    printf '%s\n' "${MENU_DIVIDER}"
     gum log --level info 'Selected group scripts completed.'
-    gum confirm 'Run the installer again?' >/dev/null || exit 0
+    gum log --level info 'To open the app again, run the installer script again.'
+    exit 0
 done
