@@ -2,8 +2,8 @@
 
 set -Eeuo pipefail
 
-# shellcheck source=../lib/init-lib.sh
-source "$(dirname -- "${BASH_SOURCE[0]}")/../lib/init-lib.sh"
+# shellcheck source=../init.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../init.sh"
 
 devModeExitIfEnabled "${BASH_SOURCE[0]}"
 
