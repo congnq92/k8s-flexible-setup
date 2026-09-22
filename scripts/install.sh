@@ -21,4 +21,6 @@ if [[ ! -d "${KFS_HOME}/.git" ]]; then
     git clone "${REPOSITORY_URL}" "${KFS_HOME}"
 fi
 
-exec "${KFS_HOME}/scripts/app/main.sh"
+printf '\nRepository installed: %s\n' "${KFS_HOME}"
+printf 'Run the app with:\n'
+printf 'bash %s/scripts/app/main.sh\n' "${KFS_HOME}"

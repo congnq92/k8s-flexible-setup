@@ -22,7 +22,7 @@ Use Gum.
 ```text
 k8s-flexible-setup/
 ├── scripts/
-│   ├── install.sh       # public bootstrap: clone/check repository, then start main.sh
+│   ├── install.sh       # public bootstrap: clone/check repository and print the app command
 │   ├── app/             # main.sh, UI, and services
 │   ├── groups/          # control-plane, worker, and NGINX Ingress installers
 │   └── lib/             # shared shell functions
@@ -31,13 +31,9 @@ k8s-flexible-setup/
 
 ## Install
 
-Linux is the first supported platform.
-
 ```sh
-curl -fsSL https://raw.githubusercontent.com/congnq92/k8s-flexible-setup/v1.37.x/scripts/install.sh | bash
+bash ~/.local/share/k8s-flexible-setup/scripts/app/main.sh
 ```
-
-- `v-1-37-x` is current active branch.
 
 ## Development
 - Hot reloading
