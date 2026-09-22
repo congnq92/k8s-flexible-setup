@@ -6,7 +6,10 @@ set -Eeuo pipefail
 source "$(dirname -- "${BASH_SOURCE[0]}")/../lib/lib-init.sh"
 # shellcheck source=../modules/dev/dev.module.sh
 importModule 'dev'
+# shellcheck source=../modules/ui/ui.module.sh
+importModule 'ui'
 devModeExitIfEnabled "${BASH_SOURCE[0]}"
+showGroupHeader '6. Metrics Server group'
 
 readonly KUBECONFIG_PATH="${KUBECONFIG_PATH:-/etc/kubernetes/admin.conf}"
 readonly METRICS_SERVER_MANIFEST_URL="${METRICS_SERVER_MANIFEST_URL:-https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml}"

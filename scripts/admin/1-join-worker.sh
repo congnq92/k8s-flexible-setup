@@ -6,7 +6,10 @@ set -Eeuo pipefail
 source "$(dirname -- "${BASH_SOURCE[0]}")/../lib/lib-init.sh"
 # shellcheck source=../modules/dev/dev.module.sh
 importModule 'dev'
+# shellcheck source=../modules/ui/ui.module.sh
+importModule 'ui'
 devModeExitIfEnabled "${BASH_SOURCE[0]}"
+showGroupHeader 'Admin: Join worker node'
 
 readonly KUBECONFIG_PATH="${KUBECONFIG_PATH:-/etc/kubernetes/admin.conf}"
 

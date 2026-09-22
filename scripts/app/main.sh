@@ -6,6 +6,8 @@ set -Eeuo pipefail
 source "$(dirname -- "${BASH_SOURCE[0]}")/../lib/lib-init.sh"
 # shellcheck source=../modules/dev/dev.module.sh
 importModule 'dev'
+# shellcheck source=../modules/ui/ui.module.sh
+importModule 'ui'
 # shellcheck source=../config/config.sh
 source "$(dirname -- "${BASH_SOURCE[0]}")/../config/config.sh"
 # shellcheck source=services/group-service.sh

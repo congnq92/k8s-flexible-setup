@@ -6,7 +6,10 @@ set -Eeuo pipefail
 source "$(dirname -- "${BASH_SOURCE[0]}")/../lib/lib-init.sh"
 # shellcheck source=../modules/dev/dev.module.sh
 importModule 'dev'
+# shellcheck source=../modules/ui/ui.module.sh
+importModule 'ui'
 devModeExitIfEnabled "${BASH_SOURCE[0]}"
+showGroupHeader '4. NGINX Ingress group'
 
 readonly INGRESS_NGINX_VERSION="${INGRESS_NGINX_VERSION:-v1.15.1}"
 readonly KUBECONFIG_PATH="${KUBECONFIG_PATH:-/etc/kubernetes/admin.conf}"

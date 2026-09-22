@@ -6,7 +6,10 @@ set -Eeuo pipefail
 source "$(dirname -- "${BASH_SOURCE[0]}")/../lib/lib-init.sh"
 # shellcheck source=../modules/dev/dev.module.sh
 importModule 'dev'
+# shellcheck source=../modules/ui/ui.module.sh
+importModule 'ui'
 devModeExitIfEnabled "${BASH_SOURCE[0]}"
+showGroupHeader '3. CNI group'
 
 readonly KUBECONFIG_PATH="${KUBECONFIG_PATH:-/etc/kubernetes/admin.conf}"
 readonly FLANNEL_MANIFEST_URL="${FLANNEL_MANIFEST_URL:-https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml}"

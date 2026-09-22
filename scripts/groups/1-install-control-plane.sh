@@ -6,7 +6,10 @@ set -Eeuo pipefail
 source "$(dirname -- "${BASH_SOURCE[0]}")/../lib/lib-init.sh"
 # shellcheck source=../modules/dev/dev.module.sh
 importModule 'dev'
+# shellcheck source=../modules/ui/ui.module.sh
+importModule 'ui'
 devModeExitIfEnabled "${BASH_SOURCE[0]}"
+showGroupHeader '1. Control-plane group'
 
 networkEnsureConfiguration
 readonly NODE_PRIVATE_IP="$(networkPrivateIpGet)"
@@ -25,7 +28,11 @@ fi
 install_node_prerequisites "${KUBERNETES_MINOR}"
 configure_kubelet_node_ip "${NODE_PRIVATE_IP}"
 
-init_args=(init "--kubernetes-version=${KUBERNETES_MINOR}" "--apiserver-advertise-address=${NODE_PRIVATE_IP}")
+KUBERNETES_VERSION="$(kubeadm version -o short)" || fail 'Cannot determine the installed kubeadm version.'
+[[ "${KUBERNETES_VERSION}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || fail "Installed kubeadm version is not valid: ${KUBERNETES_VERSION}"
+readonly KUBERNETES_VERSION
+
+init_args=(init "--kubernetes-version=${KUBERNETES_VERSION}" "--apiserver-advertise-address=${NODE_PRIVATE_IP}")
 
 if [[ -n "${CONTROL_PLANE_ENDPOINT:-}" ]]; then
     init_args+=("--control-plane-endpoint=${CONTROL_PLANE_ENDPOINT}")
@@ -35,7 +42,7 @@ if [[ -n "${POD_NETWORK_CIDR:-}" ]]; then
     init_args+=("--pod-network-cidr=${POD_NETWORK_CIDR}")
 fi
 
-log "Initializing the ${KUBERNETES_MINOR} control plane"
+log "Initializing the ${KUBERNETES_VERSION} control plane"
 kubeadm "${init_args[@]}"
 
 export KUBECONFIG=/etc/kubernetes/admin.conf

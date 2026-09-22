@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+
+# Gum setup and shared terminal presentation.
+
+readonly UI_DIVIDER='─────────────────────────────────'
+
+uiRunPrivileged() {
+    if [[ "${EUID}" -eq 0 ]]; then
+        "$@"
+    else
+        command -v sudo >/dev/null 2>&1 || fail 'sudo is required to install Gum.'
+        sudo "$@"
+    fi
+}
+
+uiEnsureGum() {
+    if command -v gum >/dev/null 2>&1; then
+        return
+    fi
+
+    [[ -r /etc/os-release ]] || fail 'Gum is not installed. Install Gum manually, then run this script again.'
+    # shellcheck disable=SC1091
+    . /etc/os-release
+    [[ "${ID}" == 'debian' || "${ID}" == 'ubuntu' ]] || fail 'Gum is not installed. This installer can install Gum only on Debian or Ubuntu.'
+
+    printf '==> Installing Gum\n'
+    uiRunPrivileged install -d -m 0755 /etc/apt/keyrings
+    curl -fsSL https://repo.charm.sh/apt/gpg.key | uiRunPrivileged gpg --dearmor --yes --output /etc/apt/keyrings/charm.gpg
+    printf '%s\n' 'deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *' | uiRunPrivileged tee /etc/apt/sources.list.d/charm.list >/dev/null
+    uiRunPrivileged apt-get update
+    uiRunPrivileged apt-get install -y gum
+}
+
+uiConfirmTwice() {
+    local message="$1"
+
+    gum confirm "${message} (1/2)?" >/dev/null || return 1
+    gum confirm "${message} (2/2)?" >/dev/null
+}
+
+uiShowHeader() {
+    local mode="$1"
+    local working_dir="$2"
+    local branch="$3"
+
+    gum style --border double --padding '0 1' --margin '1 0' 'K8s Flexible Setup' "Mode: ${mode}" "Working dir: ${working_dir}" "Branch: ${branch}"
+}
+
+uiShowCompletion() {
+    local message="$1"
+
+    printf '%s\n' "${UI_DIVIDER}"
+    gum log --level info "${message}"
+    gum log --level info 'To open the app again, run the installer script again.'
+}
+
+showGroupHeader() {
+    require_command gum
+    gum style --border double --padding '0 1' --margin '1 0' "$1"
+}
