@@ -8,6 +8,8 @@ source "$(dirname -- "${BASH_SOURCE[0]}")/../lib/lib-init.sh"
 importModule 'dev'
 # shellcheck source=../modules/ui/ui.module.sh
 importModule 'ui'
+# shellcheck source=../config/config.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../config/config.sh"
 uiShowScriptHeader "${BASH_SOURCE[0]}"
 devModeExitIfEnabled "${BASH_SOURCE[0]}"
 
@@ -32,14 +34,15 @@ KUBERNETES_VERSION="$(kubeadm version -o short)" || fail 'Cannot determine the i
 [[ "${KUBERNETES_VERSION}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || fail "Installed kubeadm version is not valid: ${KUBERNETES_VERSION}"
 readonly KUBERNETES_VERSION
 
-init_args=(init "--kubernetes-version=${KUBERNETES_VERSION}" "--apiserver-advertise-address=${NODE_PRIVATE_IP}")
+init_args=(
+    init
+    "--kubernetes-version=${KUBERNETES_VERSION}"
+    "--apiserver-advertise-address=${NODE_PRIVATE_IP}"
+    "--pod-network-cidr=${POD_NETWORK_CIDR}"
+)
 
 if [[ -n "${CONTROL_PLANE_ENDPOINT:-}" ]]; then
     init_args+=("--control-plane-endpoint=${CONTROL_PLANE_ENDPOINT}")
-fi
-
-if [[ -n "${POD_NETWORK_CIDR:-}" ]]; then
-    init_args+=("--pod-network-cidr=${POD_NETWORK_CIDR}")
 fi
 
 log "Initializing the ${KUBERNETES_VERSION} control plane"
