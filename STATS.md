@@ -1,11 +1,11 @@
 # Project Stats
 - Project name: k8s-flexible-setup
-- Generated at: 2026-09-21 10:50:08+7
+- Generated at: 2026-09-22 20:24:42+7
 - Stats:
 
 | Language     | files | blank | comment | code |
 |:-------------|------:|------:|--------:|-----:|
-| Bourne Shell |     6 |    74 |       8 |  254 |
-| Markdown     |     6 |    47 |       0 |  141 |
+| Bourne Shell |    24 |   194 |      55 |  669 |
+| Markdown     |    10 |    78 |       0 |  214 |
 | ------------ | ----- | ----- | ------- | ---- |
-| SUM:         |    12 |   121 |       8 |  395 |
+| SUM:         |    34 |   272 |      55 |  883 |
