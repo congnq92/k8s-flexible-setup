@@ -51,7 +51,7 @@ get_kubernetes_minor() {
 
     require_command git
     branch="$(git -C "${PROJECT_ROOT}" branch --show-current)"
-    [[ "${branch}" =~ ^v-([0-9]+)-([0-9]+)-x$ ]] || fail 'The active Git branch must use v-<major>-<minor>-x, for example v-1-37-x.'
+    [[ "${branch}" =~ ^v([0-9]+)\.([0-9]+)\.x$ ]] || fail 'The active Git branch must use v<major>.<minor>.x, for example v1.37.x.'
     printf 'v%s.%s\n' "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}"
 }
 
