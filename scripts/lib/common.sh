@@ -13,6 +13,18 @@ fail() {
     exit 1
 }
 
+# Usage: importModule '<module name>'
+# Module filename format: scripts/modules/<module name>/<module name>.module.sh
+importModule() {
+    local module_name="$1"
+    local module_path="${APP_PATH}/scripts/modules/${module_name}/${module_name}.module.sh"
+
+    [[ "${module_name}" =~ ^[a-z][a-z0-9-]*$ ]] || fail "Invalid module name: ${module_name}"
+    [[ -r "${module_path}" ]] || fail "Module not found: ${module_name}"
+    # shellcheck disable=SC1090
+    source "${module_path}"
+}
+
 require_root() {
     [[ "${EUID}" -eq 0 ]] || fail 'Run this script with sudo or as root.'
 }

@@ -31,12 +31,12 @@ networkLoad() {
 }
 
 networkModeGet() {
-    networkLoad || fail 'Network is not configured. Run scripts/app.sh first.'
+    networkLoad || fail 'Network is not configured. Run scripts/app/main.sh first.'
     sed -n 's/^NETWORK_MODE=//p' "${NETWORK_STATE_FILE}"
 }
 
 networkPrivateIpGet() {
-    networkLoad || fail 'Network is not configured. Run scripts/app.sh first.'
+    networkLoad || fail 'Network is not configured. Run scripts/app/main.sh first.'
     sed -n 's/^NODE_PRIVATE_IP=//p' "${NETWORK_STATE_FILE}"
 }
 

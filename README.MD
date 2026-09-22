@@ -22,8 +22,8 @@ Use Gum.
 ```text
 k8s-flexible-setup/
 ├── scripts/
-│   ├── install.sh       # public bootstrap: clone/check repository, then start app.sh
-│   ├── app.sh           # install Gum if needed, then select a group script
+│   ├── install.sh       # public bootstrap: clone/check repository, then start main.sh
+│   ├── app/             # main.sh, UI, and services
 │   ├── groups/          # control-plane, worker, and NGINX Ingress installers
 │   └── lib/             # shared shell functions
 └── docs/
@@ -42,5 +42,5 @@ curl -fsSL https://raw.githubusercontent.com/congnq92/k8s-flexible-setup/v1.37.x
 ## Development
 - Hot reloading
 ```shell
-sh scripts/z-dev/hot-reloading.sh
+sh scripts/modules/dev/hot-reloading.sh
 ```

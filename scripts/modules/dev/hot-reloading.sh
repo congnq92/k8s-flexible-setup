@@ -7,7 +7,7 @@ fi
 set -Eeuo pipefail
 
 readonly SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-readonly SOURCE_DIR="$(cd -- "${SCRIPT_DIR}/../.." && pwd -P)"
+readonly SOURCE_DIR="$(cd -- "${SCRIPT_DIR}/../../.." && pwd -P)"
 readonly SOURCE_PARENT="$(dirname -- "${SOURCE_DIR}")"
 readonly HOME_DIR="$(cd -- "${HOME}" && pwd -P)"
 readonly TARGET_REQUESTED="${KFS_HOME:-${HOME_DIR}/.local/share/k8s-flexible-setup}"
@@ -30,4 +30,4 @@ fi
 
 rm -rf -- "${TARGET_DIR}"
 cp -a -- "${SOURCE_DIR}" "${TARGET_DIR}"
-exec "${TARGET_DIR}/scripts/app.sh"
+exec "${TARGET_DIR}/scripts/app/main.sh"

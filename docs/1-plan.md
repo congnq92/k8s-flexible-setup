@@ -12,3 +12,18 @@ One Cluster
   └─ Worker nodes: 1 to 5,000 VPSs
      └─ Pods: up to 150,000 total
 ```
+
+## App module
+
+```text
+scripts/app/
+├── main.sh              # application launcher
+├── ui.sh                # Gum display, input, and navigation
+└── services/
+    ├── group-service.sh # group script planning and execution
+    └── admin-service.sh # admin script execution
+
+scripts/lib/lib-init.sh                # shared runtime modules
+scripts/modules/dev/dev.module.sh      # development-only modules
+scripts/config/config.sh               # application configuration
+```

@@ -2,8 +2,10 @@
 
 set -Eeuo pipefail
 
-# shellcheck source=../init.sh
-source "$(dirname -- "${BASH_SOURCE[0]}")/../init.sh"
+# shellcheck source=../lib/lib-init.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/../lib/lib-init.sh"
+# shellcheck source=../modules/dev/dev.module.sh
+importModule 'dev'
 devModeExitIfEnabled "${BASH_SOURCE[0]}"
 
 networkEnsureConfiguration
