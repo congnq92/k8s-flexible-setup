@@ -31,9 +31,19 @@ k8s-flexible-setup/
 
 ## Install
 
+Linux is the first supported platform.
+
 ```sh
-curl -fsSL https://raw.githubusercontent.com/congnq92/k8s-flexible-setup/v1.37.x/scripts/install.sh
+curl -fsSL https://raw.githubusercontent.com/congnq92/k8s-flexible-setup/v1.37.x/scripts/install.sh | bash
 ```
+
+The bootstrap script only installs the repository. Then start the app in the terminal:
+
+```sh
+bash ~/.local/share/k8s-flexible-setup/scripts/app/main.sh
+```
+
+- `v1.37.x` is the current active branch.
 
 ## Development
 - Hot reloading
