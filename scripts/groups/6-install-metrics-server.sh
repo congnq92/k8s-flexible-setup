@@ -8,8 +8,8 @@ source "$(dirname -- "${BASH_SOURCE[0]}")/../lib/lib-init.sh"
 importModule 'dev'
 # shellcheck source=../modules/ui/ui.module.sh
 importModule 'ui'
+uiShowScriptHeader "${BASH_SOURCE[0]}"
 devModeExitIfEnabled "${BASH_SOURCE[0]}"
-showGroupHeader '6. Metrics Server group'
 
 readonly KUBECONFIG_PATH="${KUBECONFIG_PATH:-/etc/kubernetes/admin.conf}"
 readonly METRICS_SERVER_MANIFEST_URL="${METRICS_SERVER_MANIFEST_URL:-https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml}"

@@ -8,8 +8,8 @@ source "$(dirname -- "${BASH_SOURCE[0]}")/../lib/lib-init.sh"
 importModule 'dev'
 # shellcheck source=../modules/ui/ui.module.sh
 importModule 'ui'
+uiShowScriptHeader "${BASH_SOURCE[0]}"
 devModeExitIfEnabled "${BASH_SOURCE[0]}"
-showGroupHeader '5. Local Storage group'
 
 readonly KUBECONFIG_PATH="${KUBECONFIG_PATH:-/etc/kubernetes/admin.conf}"
 readonly LOCAL_PATH_PROVISIONER_VERSION="${LOCAL_PATH_PROVISIONER_VERSION:-v0.0.32}"

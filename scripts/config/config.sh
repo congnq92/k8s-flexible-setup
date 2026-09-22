@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
-BRANCH=v1.37.x
+readonly APP_NAME='K8s Flexible Setup'
+readonly BRANCH=v1.37.x

@@ -8,8 +8,8 @@ source "$(dirname -- "${BASH_SOURCE[0]}")/../lib/lib-init.sh"
 importModule 'dev'
 # shellcheck source=../modules/ui/ui.module.sh
 importModule 'ui'
+uiShowScriptHeader "${BASH_SOURCE[0]}"
 devModeExitIfEnabled "${BASH_SOURCE[0]}"
-showGroupHeader '2. Worker group'
 
 networkEnsureConfiguration
 readonly NODE_PRIVATE_IP="$(networkPrivateIpGet)"

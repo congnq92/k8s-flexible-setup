@@ -39,11 +39,12 @@ uiConfirmTwice() {
 }
 
 uiShowHeader() {
-    local mode="$1"
-    local working_dir="$2"
-    local branch="$3"
+    local app_name="$1"
+    local mode="$2"
+    local working_dir="$3"
+    local branch="$4"
 
-    gum style --border double --padding '0 1' --margin '1 0' 'K8s Flexible Setup' "Mode: ${mode}" "Working dir: ${working_dir}" "Branch: ${branch}"
+    gum style --border double --padding '0 1' --margin '1 0' "${app_name}" "Mode: ${mode}" "Working dir: ${working_dir}" "Branch: ${branch}"
 }
 
 uiShowCompletion() {
@@ -54,7 +55,22 @@ uiShowCompletion() {
     gum log --level info 'To open the app again, run the installer script again.'
 }
 
-showGroupHeader() {
+uiShowScriptHeader() {
+    local script_path="$1"
+    local relative_path
+    local directory_name
+    local script_name
+    local header
+
+    script_path="$(cd -- "$(dirname -- "${script_path}")" && pwd)/$(basename -- "${script_path}")"
+    relative_path="${script_path#"${APP_PATH}/scripts/"}"
+    directory_name="${relative_path%%/*}"
+    script_name="${relative_path##*/}"
+    script_name="${script_name%.sh}"
+    header="${directory_name} > ${script_name}"
+    header="${header//-/ }"
+    header="$(printf '%s\n' "${header}" | sed -E 's/(^| )([[:alpha:]])/\1\u\2/g')"
+
     require_command gum
-    gum style --border double --padding '0 1' --margin '1 0' "$1"
+    gum style --border double --padding '0 1' --margin '1 0' "${header}"
 }

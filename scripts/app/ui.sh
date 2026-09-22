@@ -5,13 +5,6 @@ readonly MENU_ADMIN_JOIN_WORKER='2. Join worker node'
 readonly MENU_SWITCH_MODE='3. Switch mode: Dev | Prod'
 readonly MENU_EXIT='4. Exit'
 
-appShowHeader() {
-    local mode
-
-    mode="$(devModeGet)"
-    uiShowHeader "${mode}" "${APP_PATH}" "${BRANCH}"
-}
-
 uiRunInstallGroups() {
     local selected_item
     local selected_script
@@ -39,7 +32,7 @@ uiRun() {
     adminServiceValidate
 
     while true; do
-        appShowHeader
+        uiShowHeader "${APP_NAME}" "$(devModeGet)" "${APP_PATH}" "${BRANCH}"
         selected_item="$(gum choose "${MENU_INSTALL_GROUPS}" "${MENU_ADMIN_JOIN_WORKER}" "${MENU_SWITCH_MODE}" "${MENU_EXIT}")"
 
         case "${selected_item}" in
