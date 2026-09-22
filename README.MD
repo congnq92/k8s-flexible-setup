@@ -32,7 +32,7 @@ k8s-flexible-setup/
 ## Install
 
 ```sh
-bash ~/.local/share/k8s-flexible-setup/scripts/app/main.sh
+curl -fsSL https://raw.githubusercontent.com/congnq92/k8s-flexible-setup/v1.37.x/scripts/install.sh
 ```
 
 ## Development
