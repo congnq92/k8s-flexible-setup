@@ -2,6 +2,9 @@
 
 set -Eeuo pipefail
 
+# Requirement: run on a VPS without a local control plane after obtaining a control-plane join command.
+# This installs the dedicated Worker role and joins the VPS to the cluster.
+
 # shellcheck source=../lib/lib-init.sh
 source "$(dirname -- "${BASH_SOURCE[0]}")/../lib/lib-init.sh"
 # shellcheck source=../modules/dev/dev.module.sh

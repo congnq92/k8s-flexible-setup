@@ -6,7 +6,7 @@
 | No | Group               | Role          | Term                   | Installed components / purpose                                                  |
 |----|---------------------|---------------|------------------------|---------------------------------------------------------------------------------|
 | #1 | Control-plane group | Control-plane | standard term          | API server<br>etcd<br>scheduler<br>controller manager                           |
-| #2 | Worker group        | Worker        | standard term          | container runtime<br>kubelet<br>kube-proxy<br>Runs Ingress and application Pods |
+| #2 | Worker group        | Worker        | standard term          | `2-1` enables workload scheduling on a control-plane node; `2-2` installs and joins a dedicated worker<br>Runs Ingress and application Pods |
 | #3 | CNI group           | -             | developer-defined term | Required for Pod-to-Pod communication                                           |
 | #4 | NGINX Ingress group | -             | developer-defined term | Optional add-on on worker-capable VPSs                                          |
 | #5 | Local Storage group | -             | developer-defined term | Installs local-path-provisioner for database PVCs                               |

@@ -4,7 +4,7 @@ Yes. The same Kubernetes design can run at all three sizes.
 
 | VPSs | Layout                                                                                      | Groups to pick                                                          | Use                                               |
 |------|---------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|---------------------------------------------------|
-| 1    | Control plane + worker + Ingress + NGINX Pod                                                | Control-plane + Worker + CNI + NGINX Ingress + Local Storage + Metrics Server + Admin Tools on one VPS | Development, test, small non-critical app         |
+| 1    | Control plane + worker + Ingress + NGINX Pod                                                | Control-plane + Worker for Control-plane Node + CNI + NGINX Ingress + Local Storage + Metrics Server + Admin Tools on one VPS | Development, test, small non-critical app         |
 | 3    | Three nodes: control plane + worker roles on every node; Ingress runs on at least two nodes | Control-plane + Worker on every VPS; CNI, Local Storage, Metrics Server, and Admin Tools once; NGINX Ingress on at least two VPSs | Small production setup; survives one node failure |
 | 8    | 2 load balancers + 3 dedicated control-plane nodes + 3 worker nodes                         | Control-plane on three VPSs; Worker + NGINX Ingress on three VPSs       | Professional HA design                            |
 
@@ -13,11 +13,11 @@ Yes. The same Kubernetes design can run at all three sizes.
 | Case  | VPS   | Groups to select                       | Purpose                                                       |
 |-------|-------|----------------------------------------|---------------------------------------------------------------|
 | 1 VPS | VPS 1 | Control-plane + Worker + CNI + NGINX Ingress + Local Storage + Metrics Server + Admin Tools | Small or test cluster; all components on one VPS              |
-| 2 VPS | VPS 1 | Control-plane + Worker + CNI + NGINX Ingress + Local Storage + Metrics Server + Admin Tools | Runs cluster management, application Pods, and public Ingress |
-| 2 VPS | VPS 2 | Worker                                 | Runs additional application Pods                              |
-| 3 VPS | VPS 1 | Control-plane + Worker + CNI + NGINX Ingress + Local Storage + Metrics Server + Admin Tools | HA control plane, cluster add-ons, and Ingress                |
-| 3 VPS | VPS 2 | Control-plane + Worker + NGINX Ingress | HA control plane and Ingress                                  |
-| 3 VPS | VPS 3 | Control-plane + Worker                 | HA control plane and workloads                                |
+| 2 VPS | VPS 1 | Control-plane + Worker for Control-plane Node + CNI + NGINX Ingress + Local Storage + Metrics Server + Admin Tools | Runs cluster management, application Pods, and public Ingress |
+| 2 VPS | VPS 2 | Dedicated Worker                       | Runs additional application Pods                              |
+| 3 VPS | VPS 1 | Control-plane + Worker for Control-plane Node + CNI + NGINX Ingress + Local Storage + Metrics Server + Admin Tools | HA control plane, cluster add-ons, and Ingress                |
+| 3 VPS | VPS 2 | Control-plane + Worker for Control-plane Node + NGINX Ingress | HA control plane and Ingress                                  |
+| 3 VPS | VPS 3 | Control-plane + Worker for Control-plane Node | HA control plane and workloads                                |
 
 NGINX Ingress requires the Worker group on the same VPS, because it runs as Pods.
 
