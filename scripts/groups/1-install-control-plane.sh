@@ -11,7 +11,8 @@ devModeExitIfEnabled "${BASH_SOURCE[0]}"
 networkEnsureConfiguration
 readonly NODE_PRIVATE_IP="$(networkPrivateIpGet)"
 
-readonly KUBERNETES_MINOR="$(get_kubernetes_minor)"
+KUBERNETES_MINOR="$(get_kubernetes_minor)" || exit 1
+readonly KUBERNETES_MINOR
 readonly KUBECTL_USER="${SUDO_USER:-root}"
 readonly KUBECTL_HOME="$(getent passwd "${KUBECTL_USER}" | cut -d: -f6)"
 

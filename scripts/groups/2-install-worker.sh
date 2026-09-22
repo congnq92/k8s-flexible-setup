@@ -11,7 +11,8 @@ devModeExitIfEnabled "${BASH_SOURCE[0]}"
 networkEnsureConfiguration
 readonly NODE_PRIVATE_IP="$(networkPrivateIpGet)"
 
-readonly KUBERNETES_MINOR="$(get_kubernetes_minor)"
+KUBERNETES_MINOR="$(get_kubernetes_minor)" || exit 1
+readonly KUBERNETES_MINOR
 
 [[ -n "${CONTROL_PLANE_ENDPOINT:-}" ]] || fail 'Set CONTROL_PLANE_ENDPOINT to the control-plane private address and port, for example 10.10.0.10:6443.'
 [[ "${JOIN_TOKEN:-}" =~ ^[a-z0-9]{6}\.[a-z0-9]{16}$ ]] || fail 'Set JOIN_TOKEN to a valid kubeadm bootstrap token.'
