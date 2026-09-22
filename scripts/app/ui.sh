@@ -61,8 +61,8 @@ uiRunInstallGroups() {
         printf '%s\n' "${selected_script}"
     done
 
-    gum confirm 'Confirm to run these script(s) (1/2)?' >/dev/null || return
-    gum confirm 'Confirm to run these script(s) (2/2)?' >/dev/null || return
+    gum confirm 'Confirm to run these script(s) (1/2)?' >/dev/null || return 0
+    gum confirm 'Confirm to run these script(s) (2/2)?' >/dev/null || return 0
     groupServiceRunPlan
     uiShowCompletion 'Selected group scripts completed.'
     exit 0
