@@ -30,6 +30,20 @@ command -v kubectl >/dev/null 2>&1 || {
 
 printf '==> Installing ingress-nginx %s\n' "${INGRESS_NGINX_VERSION}"
 kubectl --kubeconfig "${KUBECONFIG_PATH}" apply -f "${INGRESS_NGINX_MANIFEST_URL}"
+
+printf '==> Binding ingress-nginx to VPS ports 80 and 443\n'
+kubectl --kubeconfig "${KUBECONFIG_PATH}" --namespace ingress-nginx patch deployment ingress-nginx-controller \
+    --type merge \
+    --patch='{"spec":{"template":{"spec":{"hostNetwork":true,"dnsPolicy":"ClusterFirstWithHostNet"}}}}'
+
+external_ips="$(kubectl --kubeconfig "${KUBECONFIG_PATH}" --namespace ingress-nginx get service ingress-nginx-controller -o jsonpath='{.spec.externalIPs}')"
+if [[ -n "${external_ips}" ]]; then
+    printf '==> Removing obsolete ingress-nginx external IP configuration\n'
+    kubectl --kubeconfig "${KUBECONFIG_PATH}" --namespace ingress-nginx patch service ingress-nginx-controller \
+        --type=json \
+        --patch='[{"op":"remove","path":"/spec/externalIPs"}]'
+fi
+
 kubectl --kubeconfig "${KUBECONFIG_PATH}" rollout status deployment/ingress-nginx-controller \
     --namespace ingress-nginx \
     --timeout=5m
