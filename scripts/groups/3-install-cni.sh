@@ -36,6 +36,6 @@ log 'Installing Flannel CNI'
 kubectl --kubeconfig "${KUBECONFIG_PATH}" apply -f "${FLANNEL_MANIFEST_URL}"
 kubectl --kubeconfig "${KUBECONFIG_PATH}" rollout status daemonset/kube-flannel-ds \
     --namespace kube-flannel \
-    --timeout=5m
+    --timeout=10m
 
 uiPrintSuccess 'CNI installed successfully'
