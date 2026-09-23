@@ -2,8 +2,8 @@
 
 readonly MENU_INSTALL_GROUPS='1. Install groups'
 readonly MENU_ADMIN_JOIN_WORKER='2. Join worker node'
-readonly MENU_SWITCH_MODE='3. Switch mode: Dev | Prod'
-readonly MENU_VERIFY_TEST='4. Verify Test'
+readonly MENU_VERIFY_TEST='3. Verify Test'
+readonly MENU_SWITCH_MODE='4. Switch mode: Dev | Prod'
 readonly MENU_EXIT='5. Exit'
 readonly MENU_VERIFY_HTTPS_INGRESS='1. Test HTTPS ingress'
 
@@ -34,7 +34,7 @@ uiRunVerifyTest() {
 
     case "${selected_item}" in
         "${MENU_VERIFY_HTTPS_INGRESS}")
-            uiPrintInfo "Test config: ${VERIFY_HTTPS_INGRESS_CONFIG}"
+            uiPrintInfo "Test script to run: ${VERIFY_HTTPS_INGRESS_SCRIPT}"
             uiConfirmTwice 'Confirm to deploy and run this verify test' || return 0
             verifyServiceRunHttpsIngress
             uiShowCompletion 'Verify test completed.'
@@ -53,7 +53,7 @@ uiRun() {
 
     while true; do
         uiShowHeader "${APP_NAME}" "$(devModeGet)" "${APP_PATH}" "${BRANCH}"
-        selected_item="$(gum choose "${MENU_INSTALL_GROUPS}" "${MENU_ADMIN_JOIN_WORKER}" "${MENU_SWITCH_MODE}" "${MENU_VERIFY_TEST}" "${MENU_EXIT}")"
+        selected_item="$(gum choose "${MENU_INSTALL_GROUPS}" "${MENU_ADMIN_JOIN_WORKER}" "${MENU_VERIFY_TEST}" "${MENU_SWITCH_MODE}" "${MENU_EXIT}")"
 
         case "${selected_item}" in
             "${MENU_INSTALL_GROUPS}")
