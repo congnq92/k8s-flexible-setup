@@ -7,5 +7,7 @@ readonly LIB_PATH="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 source "${LIB_PATH}/util.sh"
 # shellcheck source=common.sh
 source "${LIB_PATH}/common.sh"
+# shellcheck source=../modules/system/system.module.sh
+importModule 'system'
 # shellcheck source=network.sh
 source "${LIB_PATH}/network.sh"

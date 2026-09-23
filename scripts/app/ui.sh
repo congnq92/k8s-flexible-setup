@@ -46,6 +46,7 @@ uiRunVerifyTest() {
 uiRun() {
     local selected_item
 
+    waitsForUnattendedUpgrades
     uiEnsureGum
     groupServiceValidate
     adminServiceValidate
