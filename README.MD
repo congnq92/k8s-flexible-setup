@@ -25,7 +25,7 @@ k8s-flexible-setup/
 │   ├── install.sh       # public bootstrap: clone/check repository and print the app command
 │   ├── app/             # main.sh, UI, and services
 │   ├── groups/          # control-plane, worker, and NGINX Ingress installers
-│   └── lib/             # shared shell functions
+│   └── ...
 └── docs/
 ```
 
