@@ -38,6 +38,23 @@ uiConfirmTwice() {
     gum confirm "${message} (2/2)?" >/dev/null
 }
 
+uiShowCompletion() {
+    local message="$1"
+
+    printf '%s\n' "${UI_DIVIDER}"
+    gum log --level info "${message}"
+    gum log --level info 'To open the app again, run the installer script again.'
+}
+
+uiPrintHeader() {
+    local header="$1"
+
+    require_command gum
+    echo "---"
+    printf '{{ Color "7" "4" "%s" }}' "${header}" | gum format -t template
+    echo ""
+}
+
 uiShowHeader() {
     local app_name="$1"
     local mode="$2"
@@ -45,14 +62,6 @@ uiShowHeader() {
     local branch="$4"
 
     gum style --border double --padding '0 1' --margin '1 0' "${app_name}" "Mode: ${mode}" "Working dir: ${working_dir}" "Branch: ${branch}"
-}
-
-uiShowCompletion() {
-    local message="$1"
-
-    printf '%s\n' "${UI_DIVIDER}"
-    gum log --level info "${message}"
-    gum log --level info 'To open the app again, run the installer script again.'
 }
 
 uiShowScriptHeader() {
@@ -71,6 +80,5 @@ uiShowScriptHeader() {
     header="${header//-/ }"
     header="$(printf '%s\n' "${header}" | sed -E 's/(^| )([[:alpha:]])/\1\u\2/g')"
 
-    require_command gum
-    gum style --border double --padding '0 1' --margin '1 0' "${header}"
+    uiPrintHeader "${header}"
 }
