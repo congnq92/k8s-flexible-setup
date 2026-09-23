@@ -8,24 +8,19 @@ readonly SYSTEM_APT_LOCK_FILES=(
     /var/cache/apt/archives/lock
 )
 
-waitsForUnattendedUpgrades() {
-    local lock_is_held=false
-
+systemPackageUpdateLockIsHeld() {
     if [[ "${EUID}" -eq 0 ]]; then
-        fuser -s "${SYSTEM_APT_LOCK_FILES[@]}" && lock_is_held=true
-    elif pgrep -f '[u]nattended-upgrade' >/dev/null 2>&1; then
-        lock_is_held=true
+        fuser -s "${SYSTEM_APT_LOCK_FILES[@]}"
+        return
     fi
 
-    while [[ "${lock_is_held}" == true ]]; do
+    systemctl is-active --quiet apt-daily.service 2>/dev/null ||
+        systemctl is-active --quiet apt-daily-upgrade.service 2>/dev/null
+}
+
+waitsForUnattendedUpgrades() {
+    while systemPackageUpdateLockIsHeld; do
         log 'Waiting 1 minute for Ubuntu package updates to release the APT lock...'
         sleep "${SYSTEM_LOCK_WAIT_SECONDS}"
-
-        lock_is_held=false
-        if [[ "${EUID}" -eq 0 ]]; then
-            fuser -s "${SYSTEM_APT_LOCK_FILES[@]}" && lock_is_held=true
-        elif pgrep -f '[u]nattended-upgrade' >/dev/null 2>&1; then
-            lock_is_held=true
-        fi
     done
 }
