@@ -50,6 +50,9 @@ response_body="${curl_response%$'\n'*}"
 response_body="${response_body%$'\n'}"
 if [[ "${http_status}" == '200' && "${response_body}" == "${EXPECTED_RESPONSE}" ]]; then
     uiPrintSuccess "PASS: HTTPS ingress returned HTTP ${http_status}: ${response_body}"
+    uiPrintInfo 'Removing HTTPS ingress verify test resources'
+    kubectl --kubeconfig "${KUBECONFIG_PATH}" delete -f "${VERIFY_CONFIG_PATH}" --ignore-not-found
+    uiPrintSuccess 'HTTPS ingress verify test resources removed'
     exit 0
 fi
 
