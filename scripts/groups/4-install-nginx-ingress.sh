@@ -48,4 +48,4 @@ kubectl --kubeconfig "${KUBECONFIG_PATH}" rollout status deployment/ingress-ngin
     --namespace ingress-nginx \
     --timeout=5m
 
-printf '==> NGINX Ingress installed successfully\n'
+uiPrintSuccess 'NGINX Ingress installed successfully'

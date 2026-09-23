@@ -60,6 +60,6 @@ if [[ "${ALLOW_WORKLOADS_ON_CONTROL_PLANE:-false}" == 'true' ]]; then
     kubectl taint nodes --all node-role.kubernetes.io/control-plane-
 fi
 
-log 'Control plane installed'
+uiPrintSuccess 'Control plane installed'
 log 'Install a CNI plugin before expecting nodes and Pods to become Ready'
 log 'To join a worker node, run: sudo scripts/admin/1-join-worker.sh'

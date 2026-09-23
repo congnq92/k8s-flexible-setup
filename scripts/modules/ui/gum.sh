@@ -42,8 +42,8 @@ uiShowCompletion() {
     local message="$1"
 
     printf '%s\n' "${UI_DIVIDER}"
-    gum log --level info "${message}"
-    gum log --level info 'To open the app again, run the installer script again.'
+    uiPrintSuccess "${message}"
+    uiPrintInfo 'To open the app again, run the installer script again.'
 }
 
 # this is app header
@@ -71,19 +71,19 @@ uiPrintInfo() {
 
 uiPrintSuccess() {
     require_command gum
-    printf '{{ Color "2" "" "%s" }}' "$1" | gum format -t template
+    printf '{{ Color "2" "" "%s" }}' "✅ $1" | gum format -t template
     echo ""
 }
 
 uiPrintWarn() {
     require_command gum
-    printf '{{ Color "3" "" "%s" }}' "$1" | gum format -t template
+    printf '{{ Color "3" "" "%s" }}' "⚠️ $1" | gum format -t template
     echo ""
 }
 
 uiPrintError() {
     require_command gum
-    printf '{{ Color "1" "" "%s" }}' "$1" | gum format -t template
+    printf '{{ Color "1" "" "%s" }}' "❌ $1" | gum format -t template
     echo ""
 }
 

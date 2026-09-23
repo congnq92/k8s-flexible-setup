@@ -28,4 +28,4 @@ kubectl --kubeconfig "${KUBECONFIG_PATH}" patch storageclass local-path \
     --type merge \
     --patch '{"metadata":{"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 
-log 'Local storage installed successfully'
+uiPrintSuccess 'Local storage installed successfully'

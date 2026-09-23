@@ -32,4 +32,4 @@ kubeadm join "${CONTROL_PLANE_ENDPOINT}" \
     --token "${JOIN_TOKEN}" \
     --discovery-token-ca-cert-hash "${DISCOVERY_TOKEN_CA_CERT_HASH}"
 
-log 'Worker node joined successfully'
+uiPrintSuccess 'Worker node joined successfully'

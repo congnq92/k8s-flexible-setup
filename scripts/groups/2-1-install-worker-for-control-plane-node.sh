@@ -23,4 +23,4 @@ require_command kubectl
 log 'Enabling workload scheduling on control-plane nodes'
 kubectl --kubeconfig "${KUBECONFIG_PATH}" taint nodes --all node-role.kubernetes.io/control-plane-
 
-log 'Control-plane Worker role enabled'
+uiPrintSuccess 'Control-plane Worker role enabled'

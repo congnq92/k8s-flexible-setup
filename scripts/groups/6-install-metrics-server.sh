@@ -32,4 +32,4 @@ kubectl --kubeconfig "${KUBECONFIG_PATH}" rollout status deployment/metrics-serv
     --namespace kube-system \
     --timeout=5m
 
-log 'Metrics Server installed successfully'
+uiPrintSuccess 'Metrics Server installed successfully'

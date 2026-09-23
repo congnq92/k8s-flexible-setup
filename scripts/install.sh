@@ -27,6 +27,6 @@ source "${KFS_HOME}/scripts/lib/lib-init.sh"
 importModule 'ui'
 uiEnsureGum
 
-printf '\nRepository installed: %s\n' "${KFS_HOME}"
+uiPrintSuccess "Repository installed: ${KFS_HOME}"
 printf 'Run the app with:\n'
 uiPrintCode "bash ${KFS_HOME}/scripts/app/main.sh"

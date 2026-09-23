@@ -36,4 +36,4 @@ for new_node in "${new_nodes[@]}"; do
     kubectl --kubeconfig "${KUBECONFIG_PATH}" wait --for=condition=Ready "${new_node}" --timeout=5m
 done
 
-log 'New worker node is Ready'
+uiPrintSuccess 'New worker node is Ready'

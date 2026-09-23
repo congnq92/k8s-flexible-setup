@@ -24,4 +24,4 @@ curl -fsSL "${HELM_INSTALL_SCRIPT_URL}" --output "${temporary_file}"
 bash "${temporary_file}"
 helm version
 
-log 'Admin tools installed successfully'
+uiPrintSuccess 'Admin tools installed successfully'
