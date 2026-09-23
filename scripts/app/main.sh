@@ -14,6 +14,8 @@ source "$(dirname -- "${BASH_SOURCE[0]}")/../config/config.sh"
 source "${APP_PATH}/scripts/app/services/group-service.sh"
 # shellcheck source=services/admin-service.sh
 source "${APP_PATH}/scripts/app/services/admin-service.sh"
+# shellcheck source=services/verify-service.sh
+source "${APP_PATH}/scripts/app/services/verify-service.sh"
 # shellcheck source=ui.sh
 source "${APP_PATH}/scripts/app/ui.sh"
 

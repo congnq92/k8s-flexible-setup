@@ -47,11 +47,9 @@ uiShowCompletion() {
 }
 
 uiPrintHeader() {
-    local header="$1"
-
     require_command gum
     echo "---"
-    printf '{{ Color "7" "4" "%s" }}' "${header}" | gum format -t template
+    printf '{{ Color "7" "4" "%s" }}' "$1" | gum format -t template
     echo ""
 }
 
@@ -62,6 +60,30 @@ uiShowHeader() {
     local branch="$4"
 
     gum style --border double --padding '0 1' --margin '1 0' "${app_name}" "Mode: ${mode}" "Working dir: ${working_dir}" "Branch: ${branch}"
+}
+
+uiPrintInfo() {
+    require_command gum
+    printf '{{ Color "4" "" "%s" }}' "$1" | gum format -t template
+    echo ""
+}
+
+uiPrintSuccess() {
+    require_command gum
+    printf '{{ Color "2" "" "%s" }}' "$1" | gum format -t template
+    echo ""
+}
+
+uiPrintWarn() {
+    require_command gum
+    printf '{{ Color "3" "" "%s" }}' "$1" | gum format -t template
+    echo ""
+}
+
+uiPrintError() {
+    require_command gum
+    printf '{{ Color "1" "" "%s" }}' "$1" | gum format -t template
+    echo ""
 }
 
 uiShowScriptHeader() {

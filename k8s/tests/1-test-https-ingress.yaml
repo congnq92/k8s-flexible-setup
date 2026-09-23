@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kfs-verify-test
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-https-test
+  namespace: kfs-verify-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-https-test
+  template:
+    metadata:
+      labels:
+        app: nginx-https-test
+    spec:
+      containers:
+        - name: nginx
+          image: congnq92/nginx-https-test:1.27
+          ports:
+            - containerPort: 443
+              name: https
+          readinessProbe:
+            httpGet:
+              path: /
+              port: https
+              scheme: HTTPS
+            initialDelaySeconds: 2
+            periodSeconds: 2
+            failureThreshold: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-https-test
+  namespace: kfs-verify-test
+spec:
+  selector:
+    app: nginx-https-test
+  ports:
+    - name: https
+      port: 443
+      targetPort: https
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-https-test
+  namespace: kfs-verify-test
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx-https-test
+                port:
+                  name: https
