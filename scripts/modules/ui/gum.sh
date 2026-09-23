@@ -46,13 +46,7 @@ uiShowCompletion() {
     gum log --level info 'To open the app again, run the installer script again.'
 }
 
-uiPrintHeader() {
-    require_command gum
-    echo "---"
-    printf '{{ Color "7" "4" "%s" }}' "$1" | gum format -t template
-    echo ""
-}
-
+# this is app header
 uiShowHeader() {
     local app_name="$1"
     local mode="$2"
@@ -60,6 +54,13 @@ uiShowHeader() {
     local branch="$4"
 
     gum style --border double --padding '0 1' --margin '1 0' "${app_name}" "Mode: ${mode}" "Working dir: ${working_dir}" "Branch: ${branch}"
+}
+
+uiPrintHeader() {
+    require_command gum
+    echo "---"
+    printf '{{ Color "7" "4" "%s" }}' "$1" | gum format -t template
+    echo ""
 }
 
 uiPrintInfo() {
@@ -84,6 +85,11 @@ uiPrintError() {
     require_command gum
     printf '{{ Color "1" "" "%s" }}' "$1" | gum format -t template
     echo ""
+}
+
+uiPrintCode() {
+    require_command gum
+    echo "$1" | gum format -t code
 }
 
 uiShowScriptHeader() {

@@ -10,6 +10,7 @@
   - Warning info use `uiPrintWarn`
   - Error info use `uiPrintError`
   - Header use `uiPrintHeader`
+  - Code use `uiPrintCode`
 
 ## Kubernetes version
 

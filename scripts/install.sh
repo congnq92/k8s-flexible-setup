@@ -21,6 +21,12 @@ if [[ ! -d "${KFS_HOME}/.git" ]]; then
     git clone "${REPOSITORY_URL}" "${KFS_HOME}"
 fi
 
+# shellcheck source=lib/lib-init.sh
+source "${KFS_HOME}/scripts/lib/lib-init.sh"
+# shellcheck source=modules/ui/ui.module.sh
+importModule 'ui'
+uiEnsureGum
+
 printf '\nRepository installed: %s\n' "${KFS_HOME}"
 printf 'Run the app with:\n'
-printf 'bash %s/scripts/app/main.sh\n' "${KFS_HOME}"
+uiPrintCode "bash ${KFS_HOME}/scripts/app/main.sh"
