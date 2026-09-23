@@ -15,7 +15,7 @@
 
 ## UI
 
-Use Gum.
+Use [Gum](https://github.com/charmbracelet/gum)
 
 ## Project directory
 
