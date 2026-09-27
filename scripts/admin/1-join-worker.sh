@@ -20,7 +20,7 @@ require_command kubectl
 [[ -r "${KUBECONFIG_PATH}" ]] || fail "Kubernetes admin kubeconfig not found: ${KUBECONFIG_PATH}"
 
 mapfile -t existing_nodes < <(kubectl --kubeconfig "${KUBECONFIG_PATH}" get nodes -o name | sort)
-join_command="$(kubeadm token create --print-join-command)"
+join_command="sudo $(kubeadm token create --print-join-command)"
 
 gum style --bold 'Run this command on the worker node:'
 printf '\n%s\n\n' "${join_command}"
