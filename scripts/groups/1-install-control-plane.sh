@@ -53,6 +53,13 @@ kubeadm "${init_args[@]}"
 
 export KUBECONFIG=/etc/kubernetes/admin.conf
 
+readonly WORKLOAD_GROUP_INDEX=1
+readonly WORKLOAD_GROUP_VALUE="group-${WORKLOAD_GROUP_INDEX}"
+log "Labeling ${KUBERNETES_NODE_NAME} with ${WORKLOAD_GROUP_LABEL}=${WORKLOAD_GROUP_VALUE}"
+kubectl label node "${KUBERNETES_NODE_NAME}" "${WORKLOAD_GROUP_LABEL}=${WORKLOAD_GROUP_VALUE}" --overwrite
+networkWorkloadGroupIndexSave "${WORKLOAD_GROUP_INDEX}"
+uiPrintInfo "Workload group label applied: ${KUBERNETES_NODE_NAME} -> ${WORKLOAD_GROUP_LABEL}=${WORKLOAD_GROUP_VALUE}"
+
 # Give the user who started this install local kubectl access.
 # admin.conf has cluster-admin privileges and must stay on the control-plane VPS.
 install -d -m 0700 -o "${KUBECTL_USER}" -g "$(id -gn "${KUBECTL_USER}")" "${KUBECTL_HOME}/.kube"

@@ -5,6 +5,7 @@ readonly NETWORK_APP_USER="${SUDO_USER:-${USER}}"
 readonly NETWORK_APP_HOME="$(getent passwd "${NETWORK_APP_USER}" | cut -d: -f6)"
 readonly NETWORK_STATE_DIR="${NETWORK_APP_HOME:-${HOME}}/.local/state/k8s-flexible-setup"
 readonly NETWORK_STATE_FILE="${NETWORK_STATE_DIR}/network.env"
+readonly WORKLOAD_GROUP_LABEL='workload-group'
 
 networkIsValidIp() {
     local private_ip="$1"
@@ -45,6 +46,30 @@ networkNodeNameGet() {
 
     private_ip="$(networkPrivateIpGet)"
     printf 'node-%s\n' "${private_ip//./-}"
+}
+
+networkWorkloadGroupIndexGet() {
+    local group_index
+
+    networkLoad || return 1
+    group_index="$(sed -n 's/^KUBERNETES_WORKLOAD_GROUP_INDEX=//p' "${NETWORK_STATE_FILE}")"
+    [[ "${group_index}" =~ ^[1-9][0-9]*$ ]] || return 1
+    printf '%s\n' "${group_index}"
+}
+
+networkWorkloadGroupIndexSave() {
+    local group_index="$1"
+    local mode
+    local private_ip
+
+    [[ "${group_index}" =~ ^[1-9][0-9]*$ ]] || fail 'Workload group index must be a positive integer.'
+    networkLoad || fail 'Network is not configured. Run scripts/app/main.sh first.'
+    mode="$(networkModeGet)"
+    private_ip="$(networkPrivateIpGet)"
+
+    printf 'NETWORK_MODE=%s\nNODE_PRIVATE_IP=%s\nKUBERNETES_WORKLOAD_GROUP_INDEX=%s\n' \
+        "${mode}" "${private_ip}" "${group_index}" >"${NETWORK_STATE_FILE}"
+    chmod 600 "${NETWORK_STATE_FILE}"
 }
 
 networkConfigure() {

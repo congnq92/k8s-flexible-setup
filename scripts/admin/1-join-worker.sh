@@ -31,12 +31,25 @@ mapfile -t new_nodes < <(comm -13 <(printf '%s\n' "${existing_nodes[@]}") <(prin
 
 ((${#new_nodes[@]} > 0)) || fail 'No new worker node was found. Run the printed join command on the worker, then run this script again.'
 
+if ! workload_group_index="$(networkWorkloadGroupIndexGet)"; then
+    workload_group_index=1
+    networkWorkloadGroupIndexSave "${workload_group_index}"
+    uiPrintInfo 'Workload group state initialized: group-1'
+fi
+
 for new_node in "${new_nodes[@]}"; do
+    workload_group_index=$((workload_group_index + 1))
+    workload_group_value="group-${workload_group_index}"
+
     log "Waiting for ${new_node} to become Ready"
     kubectl --kubeconfig "${KUBECONFIG_PATH}" wait --for=condition=Ready "${new_node}" --timeout=5m
     log "Labeling ${new_node} as a worker"
     kubectl --kubeconfig "${KUBECONFIG_PATH}" label "${new_node}" node-role.kubernetes.io/worker= --overwrite
     uiPrintInfo "Worker role label applied: ${new_node}"
+    log "Labeling ${new_node} with ${WORKLOAD_GROUP_LABEL}=${workload_group_value}"
+    kubectl --kubeconfig "${KUBECONFIG_PATH}" label "${new_node}" "${WORKLOAD_GROUP_LABEL}=${workload_group_value}" --overwrite
+    networkWorkloadGroupIndexSave "${workload_group_index}"
+    uiPrintInfo "Workload group label applied: ${new_node} -> ${WORKLOAD_GROUP_LABEL}=${workload_group_value}"
 done
 
 uiPrintSuccess 'New worker node is Ready'
