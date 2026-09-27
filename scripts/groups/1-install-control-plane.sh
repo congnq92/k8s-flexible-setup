@@ -15,6 +15,8 @@ devModeExitIfEnabled "${BASH_SOURCE[0]}"
 
 networkEnsureConfiguration
 readonly NODE_PRIVATE_IP="$(networkPrivateIpGet)"
+readonly KUBERNETES_NODE_NAME="$(networkNodeNameGet)"
+uiPrintInfo "Generated Kubernetes node name: ${KUBERNETES_NODE_NAME}"
 
 KUBERNETES_MINOR="$(get_kubernetes_minor)" || exit 1
 readonly KUBERNETES_MINOR
@@ -29,6 +31,7 @@ fi
 
 install_node_prerequisites "${KUBERNETES_MINOR}"
 configure_kubelet_node_ip "${NODE_PRIVATE_IP}"
+configure_kubernetes_node_name "${KUBERNETES_NODE_NAME}"
 
 KUBERNETES_VERSION="$(kubeadm version -o short)" || fail 'Cannot determine the installed kubeadm version.'
 [[ "${KUBERNETES_VERSION}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || fail "Installed kubeadm version is not valid: ${KUBERNETES_VERSION}"

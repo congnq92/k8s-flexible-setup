@@ -40,6 +40,13 @@ networkPrivateIpGet() {
     sed -n 's/^NODE_PRIVATE_IP=//p' "${NETWORK_STATE_FILE}"
 }
 
+networkNodeNameGet() {
+    local private_ip
+
+    private_ip="$(networkPrivateIpGet)"
+    printf 'node-%s\n' "${private_ip//./-}"
+}
+
 networkConfigure() {
     local selected_mode
     local private_ip

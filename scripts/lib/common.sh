@@ -81,6 +81,15 @@ configure_kubelet_node_ip() {
     systemctl daemon-reload
 }
 
+configure_kubernetes_node_name() {
+    local node_name="$1"
+
+    require_root
+    require_command hostnamectl
+    log "Configuring Kubernetes node name: ${node_name}"
+    hostnamectl set-hostname "${node_name}"
+}
+
 configure_containerd() {
     log 'Installing and configuring containerd'
     apt-get update
