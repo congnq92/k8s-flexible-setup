@@ -35,7 +35,7 @@ for new_node in "${new_nodes[@]}"; do
     log "Waiting for ${new_node} to become Ready"
     kubectl --kubeconfig "${KUBECONFIG_PATH}" wait --for=condition=Ready "${new_node}" --timeout=5m
     log "Labeling ${new_node} as a worker"
-    kubectl --kubeconfig "${KUBECONFIG_PATH}" label node "${new_node}" node-role.kubernetes.io/worker= --overwrite
+    kubectl --kubeconfig "${KUBECONFIG_PATH}" label "${new_node}" node-role.kubernetes.io/worker= --overwrite
     uiPrintInfo "Worker role label applied: ${new_node}"
 done
 
